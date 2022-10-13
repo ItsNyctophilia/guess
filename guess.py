@@ -38,21 +38,24 @@ while guess != answer:
             end='' 
             f"{guess} is outside of the accepted range (1 - 100) "
             "Try again.\nYour guess: ")
-
-    if guess > answer:
-        print(
-            end=''
-            f"{guess} is too high. Try again.\n"
-            "Your guess: ")
-
-    elif guess < answer:
-        print(
-            end=''
-            f"{guess} is too low. Try again.\n"
-            "Your guess: ")
+        invalid += 1
 
     else:
-        print(
-            f"{guess} is correct.\n"
-            f"You made {total} total guess{pluralize(total)} and "
-            f"{invalid} invalid guess{pluralize(invalid)}.")
+
+        if guess > answer:
+            print(
+                end=''
+                f"{guess} is too high. Try again.\n"
+                "Your guess: ")
+
+        elif guess < answer:
+            print(
+                end=''
+                f"{guess} is too low. Try again.\n"
+                "Your guess: ")
+
+        else:
+            print(
+                f"{guess} is correct.\n"
+                f"You made {total} total guess{pluralize(total)} and "
+                f"{invalid} invalid guess{pluralize(invalid)}.")
