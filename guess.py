@@ -31,10 +31,18 @@ def clear():  # geeksforgeeks.org/clear-screen-python
 
 
 def quitcheck(userinput):
-    confirmation = ""
+    """Checks if the user started the quitting process by typing q
+
+    Arguments:
+    userinput -- the user's guess from the current game round
+    Returns:
+    True if the user tried to quit, otherwise False"""
+
+    confirmation = ""  # Instantiates 'confirmation' as an empty string
+    # so that if the user did not start the quitting process,
+    # the function returns False.
 
     if userinput == "q":
-
         clear()
         print(
             end=''
@@ -43,7 +51,6 @@ def quitcheck(userinput):
             "\n(y/n): ")
 
         while confirmation != "n":
-
             confirmation = input()
 
             if confirmation == "y":
@@ -57,15 +64,32 @@ def quitcheck(userinput):
                     "Invalid response.\n"
                     "\nAre you sure you would like to quit?\n"
                     "\n(y/n): ")
-        print(
-            end=''
-            "Resuming. . .\n\nYour guess: ")
+
+        clear()
+        print(end='' "Resuming. . .\n")
+
+        # Below checks if lastguess was instantiated as a nonzero value
+        # by a valid guess. If it was, tell the user if their last
+        # guess was too low or too high, otherwise, repeat the
+        # introductory message.
+        if lastguess:
+            if lastguess > answer:
+                print(f"Your last guess {lastguess} was too high")
+            else:
+                print(f"Your last guess {lastguess} was too low")
+        else:
+            print(
+                "I'm thinking of a number from 1 and 100. "
+                "Type 'q' to quit")
+        print(end='' "\nYour guess: ")
 
     return True if confirmation else False
 
 
-answer = rand(1, 99)
-guess = total = invalid = 0
+answer = rand(1, 100)  # Instantiate computer's starting number as
+# random integer from 1 to 100.
+lastguess = guess = total = invalid = 0  # Instantiate multiple
+# variables to be used later as 0 as a placeholder.
 
 clear()
 print(
@@ -79,8 +103,12 @@ while guess != answer:
 
     guess = input()  # Gather user input
 
-    if not quitcheck(guess):
+    if not quitcheck(guess):  # If the user tried to quit, guess == 'q',
+        # don't try to check if their input is valid.
 
+        # If user string can be turned into an integer, it's  valid
+        # input, continue as normal, otherwise, catch the ValueError,
+        # inform the user, and increment the invalid guess counter
         try:
             guess = int(guess)
 
@@ -95,7 +123,7 @@ while guess != answer:
         finally:
             total += 1
 
-        if guess < 1 or guess > 100:
+        if guess < 1 or guess > 100:  # Check if guess in 1 - 100 range
             print(
                 end='' 
                 f"\n{guess} is outside of the accepted range"
@@ -105,17 +133,20 @@ while guess != answer:
 
         else:
 
-            if guess > answer:
+            if guess > answer:  # Case: user guess too high
                 print(
                     end=''
                     f"\n{guess} is too high. Try again.\n"
                     "\nYour guess: ")
 
-            elif guess < answer:
+            elif guess < answer:  # Case: user guess too low
                 print(
                     end=''
                     f"\n{guess} is too low. Try again.\n"
                     "\nYour guess: ")
+
+            lastguess = guess  # save value of guess as lastguess in
+            # case the user starts quitting and the screen is cleared
 
 print(
     f"{guess} is correct.\n"
