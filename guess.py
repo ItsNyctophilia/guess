@@ -279,7 +279,6 @@ while True:
 
 print(
     end=''
-    f"{answer}\n"
     f"{player_name}, I'm thinking of a number from 1 and 100. "
     "Type 'q' to quit.\n\nYour guess: ")
 
