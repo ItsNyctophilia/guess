@@ -7,6 +7,7 @@ if they are too high, too low, or got the correct answer"""
 
 from random import randint as rand
 from os import system, name
+from os.path import exists
 import sys
 
 
@@ -123,7 +124,28 @@ player_name = input()
 # Add fancy code reading existing number values from file and
 # unpacking them into the object here
 
-current_player = Save(player_name, 0, 0, 0)
+if exists("./.guess_saves"):
+    with open(".guess_saves", "r+") as fo:
+
+        found_match = False
+        content = fo.read().splitlines()
+        print(content)
+
+        for line in content:
+
+            line = line.split(",")
+
+            if player_name == line[0]:
+                current_player = Save(
+                    player_name, int(line[1]),
+                    int(line[2]), int(line[3]))
+                found_match = True
+                break
+
+        if not found_match:
+            fo.write(player_name + ",0,0,0")
+            current_player = Save(player_name, 0, 0, 0)
+
 
 print(
     end=''
