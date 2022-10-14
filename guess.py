@@ -30,22 +30,11 @@ def clear():  # geeksforgeeks.org/clear-screen-python
         system('clear')
 
 
-answer = rand(1, 99)
-guess = total = invalid = 0
+def quitcheck(userinput):
+    confirmation = ""
 
-clear()
-print(
-    end=''
-    f"{answer}\n"
-    "I'm thinking of a number from 1 and 100. Type 'q' to quit \n"
-    "\nYour guess: ")
+    if userinput == "q":
 
-while guess != answer:
-
-    guess = input()  # Gather user input
-
-    if guess == "q":
-        confirmation = ""
         clear()
         print(
             end=''
@@ -68,10 +57,29 @@ while guess != answer:
                     "Invalid response.\n"
                     "\nAre you sure you would like to quit?\n"
                     "\n(y/n): ")
+        print(
+            end=''
+            "Resuming. . .\n\nYour guess: ")
 
-        print(end='' "\nYour guess: ")
+    return True if confirmation else False
 
-    else:
+
+answer = rand(1, 99)
+guess = total = invalid = 0
+
+clear()
+print(
+    end=''
+    f"{answer}\n"
+    "I'm thinking of a number from 1 and 100. Type 'q' to quit \n"
+    "\nYour guess: ")
+
+
+while guess != answer:
+
+    guess = input()  # Gather user input
+
+    if not quitcheck(guess):
 
         try:
             guess = int(guess)
