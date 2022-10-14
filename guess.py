@@ -1,23 +1,37 @@
 #!/usr/bin/python3
+"""Interactive high-low number guessing game
+
+Prompts the user for a number and checks it against a
+randomly-generated integer between 1 and 100, telling them
+if they are too high, too low, or got the correct answer"""
 
 from random import randint as rand
-from os import system, name  # geeksforgeeks.org/clear-screen-python
+from os import system, name
 import sys
-
-answer = rand(1, 99)
-guess = total = invalid = 0
 
 
 def pluralize(number):
+    """Pluralizes given word that normally ends in 'es' when plural
+
+    Arguments:
+    number -- number check word pluralization for
+    Returns:
+    '' or 'es' if the word should be plural"""
+
     return "" if number == 1 else "es"
 
 
-def clear():
+def clear():  # geeksforgeeks.org/clear-screen-python
+    """Clears the screen"""
+
     if name == 'nt':
         system('cls')
     else:
         system('clear')
 
+
+answer = rand(1, 99)
+guess = total = invalid = 0
 
 clear()
 print(
@@ -28,7 +42,7 @@ print(
 
 while guess != answer:
 
-    guess = input()
+    guess = input()  # Gather user input
 
     if guess == "q":
         confirmation = ""
@@ -50,10 +64,10 @@ while guess != answer:
             elif confirmation != "n":
                 clear()
                 print(
-                      end=''
-                      "Invalid response.\n"
-                      "\nAre you sure you would like to quit?\n"
-                      "\n(y/n): ")
+                    end=''
+                    "Invalid response.\n"
+                    "\nAre you sure you would like to quit?\n"
+                    "\n(y/n): ")
 
         print(end='' "\nYour guess: ")
 
@@ -95,8 +109,7 @@ while guess != answer:
                     f"\n{guess} is too low. Try again.\n"
                     "\nYour guess: ")
 
-            else:
-                print(
-                    f"{guess} is correct.\n"
-                    f"You made {total} total guess{pluralize(total)} "
-                    f"and {invalid} invalid guess{pluralize(invalid)}.")
+print(
+    f"{guess} is correct.\n"
+    f"You made {total} total guess{pluralize(total)} "
+    f"and {invalid} invalid guess{pluralize(invalid)}.")
