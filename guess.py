@@ -31,7 +31,7 @@ def clear():  # geeksforgeeks.org/clear-screen-python
 
 
 def quitcheck(userinput):
-    """Checks if the user started the quitting process by typing q
+    """Checks if the user started the quitting process by typing 'q'
 
     Arguments:
     userinput -- the user's guess from the current game round
@@ -86,12 +86,45 @@ def quitcheck(userinput):
     return True if confirmation else False
 
 
+class Save:
+
+    def __init__(self, user, total_games, total_guess, invalid_guess):
+        self.user = user
+        self.total_games = total_games
+        self.total_guess = total_guess
+        self.invalid_guess = invalid_guess
+
+    def show(self):
+        print(
+            f"You have played {self.total_games} game overall, "
+            f"have made {self.total_guess} total "
+            f"guess{pluralize(self.total_guess)}, "
+            f"and {self.invalid_guess} invalid "
+            f"guess{pluralize(self.invalid_guess)}.")
+
+    def update(self, current_guess, current_invalid):
+        self.total_games += 1
+        self.total_guess += current_guess
+        self.invalid_guess += current_invalid
+
+
 answer = rand(1, 100)  # Instantiate computer's starting number as
 # random integer from 1 to 100.
 lastguess = guess = total = invalid = 0  # Instantiate multiple
-# variables to be used later as 0 as a placeholder.
+# variables to be used later using 0 as a placeholder.
 
-clear()
+print(
+    end=''
+    "Please enter your name.\n"
+    "\nName: ")
+
+player_name = input()
+
+# Add fancy code reading existing number values from file and
+# unpacking them into the object here
+
+current_player = Save(player_name, 0, 0, 0)
+
 print(
     end=''
     f"{answer}\n"
@@ -106,7 +139,7 @@ while guess != answer:
     if not quitcheck(guess):  # If the user tried to quit, guess == 'q',
         # don't try to check if their input is valid.
 
-        # If user string can be turned into an integer, it's  valid
+        # If user string can be turned into an integer, it's valid
         # input, continue as normal, otherwise, catch the ValueError,
         # inform the user, and increment the invalid guess counter
         try:
@@ -115,8 +148,8 @@ while guess != answer:
         except ValueError:
             print(
                 end='' 
-                f"{guess} is not a valid guess. Try again.\n"
-                "Your guess: ")
+                f"\n{guess} is not a valid guess. Try again.\n"
+                "\nYour guess: ")
             invalid += 1
             continue
 
@@ -127,7 +160,7 @@ while guess != answer:
             print(
                 end='' 
                 f"\n{guess} is outside of the accepted range"
-                " (1 - 100)\n\nTry again.\n"
+                " (1 - 100). Try again.\n"
                 "\nYour guess: ")
             invalid += 1
 
@@ -150,5 +183,8 @@ while guess != answer:
 
 print(
     f"{guess} is correct.\n"
-    f"You made {total} total guess{pluralize(total)} "
+    f"This game, you made {total} total guess{pluralize(total)} "
     f"and {invalid} invalid guess{pluralize(invalid)}.")
+
+current_player.update(total, invalid)
+current_player.show()
