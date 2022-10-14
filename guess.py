@@ -87,7 +87,57 @@ def quitcheck(userinput):
     return True if confirmation else False
 
 
-class Save:
+def savegame():
+    with open(".guess_saves", "r") as fo:
+
+        all_content = fo.read()
+        all_content = all_content.splitlines()
+
+    with open(".guess_saves", "w") as fo:
+
+        for index, line in enumerate(all_content):
+
+            if player_name == line.split(",")[0]:
+                fo.writelines(current_player.print_save_string())
+                fo.write("\n")
+
+            else:
+                fo.writelines(line)
+                fo.write("\n")
+
+
+def loadgame():
+    global current_player
+
+    if exists("./.guess_saves"):
+        with open(".guess_saves", "r+") as fo:
+
+            found_match = False
+            content = fo.read().splitlines()
+
+            for line in content:
+
+                line = line.split(",")
+
+                if player_name == line[0]:
+
+                    current_player = SaveData(
+                        player_name, int(line[1]),
+                        int(line[2]), int(line[3]))
+                    found_match = True
+                    break
+
+            if not found_match:
+                fo.write(player_name + ",0,0,0")
+                current_player = SaveData(player_name, 0, 0, 0)
+
+    else:
+        with open(".guess_saves", "w") as fo:
+            fo.write(player_name + ",0,0,0")
+            current_player = SaveData(player_name, 0, 0, 0)
+
+
+class SaveData:
 
     def __init__(self, user, total_games, total_guess, invalid_guess):
         self.user = user
@@ -96,8 +146,11 @@ class Save:
         self.invalid_guess = invalid_guess
 
     def show(self):
+        # stackoverflow.com/questions/21872366 for the trick on line
+        # 103 for formatting the plural of 'game'
         print(
-            f"You have played {self.total_games} game overall, "
+            f"You have played {self.total_games} "
+            f"game{'s'[:self.total_games != 1]} overall, " 
             f"have made {self.total_guess} total "
             f"guess{pluralize(self.total_guess)}, "
             f"and {self.invalid_guess} invalid "
@@ -108,11 +161,17 @@ class Save:
         self.total_guess += current_guess
         self.invalid_guess += current_invalid
 
+    def print_save_string(self):
+        return(
+            f"{self.user},{self.total_games},"
+            f"{self.total_guess},{self.invalid_guess}")
+
 
 answer = rand(1, 100)  # Instantiate computer's starting number as
 # random integer from 1 to 100.
 lastguess = guess = total = invalid = 0  # Instantiate multiple
 # variables to be used later using 0 as a placeholder.
+current_player = None
 
 print(
     end=''
@@ -120,31 +179,7 @@ print(
     "\nName: ")
 
 player_name = input()
-
-# Add fancy code reading existing number values from file and
-# unpacking them into the object here
-
-if exists("./.guess_saves"):
-    with open(".guess_saves", "r+") as fo:
-
-        found_match = False
-        content = fo.read().splitlines()
-        print(content)
-
-        for line in content:
-
-            line = line.split(",")
-
-            if player_name == line[0]:
-                current_player = Save(
-                    player_name, int(line[1]),
-                    int(line[2]), int(line[3]))
-                found_match = True
-                break
-
-        if not found_match:
-            fo.write(player_name + ",0,0,0")
-            current_player = Save(player_name, 0, 0, 0)
+loadgame()
 
 
 print(
@@ -204,9 +239,11 @@ while guess != answer:
             # case the user starts quitting and the screen is cleared
 
 print(
-    f"{guess} is correct.\n"
-    f"This game, you made {total} total guess{pluralize(total)} "
-    f"and {invalid} invalid guess{pluralize(invalid)}.")
+    f"\n{guess} is correct.\n"
+    f"\nThis game, you made {total} total guess{pluralize(total)} "
+    f"and {invalid} invalid guess{pluralize(invalid)}.\n")
 
 current_player.update(total, invalid)
+
+savegame()
 current_player.show()
