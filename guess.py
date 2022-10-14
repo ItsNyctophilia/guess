@@ -170,14 +170,14 @@ def load_game():
 
             if not found_match:
 
-                fo.write(player_name + ",0,0,0")
+                fo.write(player_name + ",0,0,0" + "\n")
                 current_player = SaveData(player_name, 0, 0, 0)
 
     else:
 
         with open(".guess_saves", "w") as fo:
 
-            fo.write(player_name + ",0,0,0")
+            fo.write(player_name + ",0,0,0" + "\n")
             current_player = SaveData(player_name, 0, 0, 0)
 
 
