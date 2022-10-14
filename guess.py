@@ -31,7 +31,7 @@ def pluralize(number):
 def clear():  # geeksforgeeks.org/clear-screen-python
     """Clears the screen"""
 
-    if name == 'nt':
+    if name == 'nt':  # If on Windows machine.
         system('cls')
     else:
         system('clear')
@@ -50,6 +50,7 @@ def quitcheck(userinput):
     # the function returns False.
 
     if userinput == "q":
+
         clear()
         print(
             end=''
@@ -57,14 +58,19 @@ def quitcheck(userinput):
             "(Your current game stats will not be saved)\n"
             "\n(y/n): ")
 
-        while confirmation != "n":
+        while confirmation != "n":  # Exit loop if user types "n" to
+            # decline quitting.
+
             confirmation = input()
 
-            if confirmation == "y":
+            if confirmation == "y":  # User confirmed quit, exit.
+
                 clear()
                 sys.exit()
 
-            elif confirmation != "n":
+            elif confirmation != "n":  # Input was neither n nor y,
+                # inform user of error.
+
                 clear()
                 print(
                     end=''
@@ -80,14 +86,21 @@ def quitcheck(userinput):
         # guess was too low or too high, otherwise, repeat the
         # introductory message.
         if last_guess:
+
             if last_guess > answer:
+
                 print(f"Your last guess {last_guess} was too high")
+
             else:
+
                 print(f"Your last guess {last_guess} was too low")
+
         else:
+
             print(
                 "I'm thinking of a number from 1 and 100. "
                 "Type 'q' to quit")
+
         print(end='' "\nYour guess: ")
 
     return True if confirmation else False
@@ -111,6 +124,7 @@ def save_game():
         for line in all_content:
 
             if player_name == line.split(",")[0]:
+
                 fo.writelines(current_player.print_save_string())
                 # Overwrite existing data with new data if the user's
                 # name value in file matches the current user's name as
@@ -118,6 +132,7 @@ def save_game():
                 fo.write("\n")
 
             else:
+
                 fo.writelines(line)
                 # Otherwise, write the existing line as-is.
                 fo.write("\n")
@@ -135,6 +150,7 @@ def load_game():
     global current_player
 
     if exists(".guess_saves"):  # Verify that .guess_saves exists
+
         with open(".guess_saves", "r+") as fo:
 
             found_match = False
@@ -153,11 +169,14 @@ def load_game():
                     break
 
             if not found_match:
+
                 fo.write(player_name + ",0,0,0")
                 current_player = SaveData(player_name, 0, 0, 0)
 
     else:
+
         with open(".guess_saves", "w") as fo:
+
             fo.write(player_name + ",0,0,0")
             current_player = SaveData(player_name, 0, 0, 0)
 
@@ -265,17 +284,20 @@ while True:
 
     player_name = input()
 
-    if player_name.isalpha():
+    if player_name.isalpha():  # Valid names are exclusively
+        # alphabetical with no spaces, for ease of storage.
+
         load_game()
         clear()
         break
+
     else:
+
         clear()
         print("Names may only contain alphabetical "
               "characters and no spaces.\n"
               "\nPress enter to continue.")
         input()
-
 
 print(
     end=''
@@ -292,7 +314,9 @@ while guess != answer:
         # If user string can be turned into an integer, it's valid
         # input, continue as normal, otherwise, catch the ValueError,
         # inform the user, and increment the invalid guess counter
+
         try:
+
             guess = int(guess)
 
         except ValueError:
@@ -305,6 +329,7 @@ while guess != answer:
             continue
 
         finally:
+
             total += 1
 
         if guess < 1 or guess > 100:  # Check if guess in 1 - 100
@@ -320,12 +345,14 @@ while guess != answer:
         else:  # if user's input is valid, test it against 'answer'
 
             if guess > answer:  # Case: user guess is too high
+
                 print(
                     end=''
                     f"\n{guess} is too high. Try again.\n"
                     "\nYour guess: ")
 
             elif guess < answer:  # Case: user guess is too low
+
                 print(
                     end=''
                     f"\n{guess} is too low. Try again.\n"
